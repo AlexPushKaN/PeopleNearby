@@ -12,7 +12,6 @@
 		4D22A3842D5869E3008D456B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D22A3832D5869E3008D456B /* Assets.xcassets */; };
 		4D22A3872D5869E3008D456B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D22A3852D5869E3008D456B /* LaunchScreen.storyboard */; };
 		4D22A3922D586C4C008D456B /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3912D586C4C008D456B /* Person.swift */; };
-		4D22A3942D586C62008D456B /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3932D586C62008D456B /* Location.swift */; };
 		4D22A3972D586C92008D456B /* PeopleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3962D586C92008D456B /* PeopleService.swift */; };
 		4D22A3992D586CAE008D456B /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3982D586CAE008D456B /* LocationManager.swift */; };
 		4D22A39C2D586CF7008D456B /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A39B2D586CF7008D456B /* PersonCell.swift */; };
@@ -32,7 +31,6 @@
 		4D22A3862D5869E3008D456B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4D22A3882D5869E3008D456B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D22A3912D586C4C008D456B /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
-		4D22A3932D586C62008D456B /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		4D22A3962D586C92008D456B /* PeopleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleService.swift; sourceTree = "<group>"; };
 		4D22A3982D586CAE008D456B /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		4D22A39B2D586CF7008D456B /* PersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonCell.swift; sourceTree = "<group>"; };
@@ -94,7 +92,6 @@
 			isa = PBXGroup;
 			children = (
 				4D22A3912D586C4C008D456B /* Person.swift */,
-				4D22A3932D586C62008D456B /* Location.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -228,7 +225,6 @@
 				4D22A37B2D5869E2008D456B /* AppDelegate.swift in Sources */,
 				4D22A39F2D586D33008D456B /* PeopleViewController.swift in Sources */,
 				4D22A37D2D5869E2008D456B /* SceneDelegate.swift in Sources */,
-				4D22A3942D586C62008D456B /* Location.swift in Sources */,
 				4D22A3A12D586D65008D456B /* SelectedPersonView.swift in Sources */,
 				4D22A39C2D586CF7008D456B /* PersonCell.swift in Sources */,
 				4D22A3AD2D58CA6D008D456B /* PeopleViewModelProtocol.swift in Sources */,

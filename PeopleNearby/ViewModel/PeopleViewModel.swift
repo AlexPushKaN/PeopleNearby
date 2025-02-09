@@ -11,20 +11,18 @@ import CoreLocation
 final class PeopleViewModel: PeopleViewModelProtocol {
     private let peopleService: PeopleService
     private let locationManager: LocationManager
-    
+    var onPeopleUpdated: (() -> Void)?
     var people: [Person] = [] {
         didSet { onPeopleUpdated?() }
     }
 
-    var onPeopleUpdated: (() -> Void)?
-    
     init(services people: PeopleService, and: LocationManager) {
         self.peopleService = people
         self.locationManager = and
     }
     
-    func fetchPeople() {
-        peopleService.fetchPeople { [weak self] people in
+    func fetchPeople(nearby location: CLLocation) {
+        peopleService.fetchPeople(nearby: location) { [weak self] people in
             self?.people = people
         }
     }
@@ -41,6 +39,10 @@ final class PeopleViewModel: PeopleViewModelProtocol {
     }
     
     func getCurrentLocation() -> CLLocation? {
-        return locationManager.getCurrentLocation()
+        if let location = locationManager.getCurrentLocation() {
+            return location
+        } else {
+            return CLLocation(latitude: 59.9386, longitude: 30.3141) // - Координаты Петербурга по умолчанию
+        }
     }
 }

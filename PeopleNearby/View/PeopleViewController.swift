@@ -32,8 +32,14 @@ final class PeopleViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         setupBindigs()
-        fetchPeople()
-        startUpdatingLocations()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let currentCoordinate = peopleViewModel.getCurrentLocation() {
+            peopleViewModel.fetchPeople(nearby: currentCoordinate)
+            startUpdatingLocations()
+        }
     }
     
     private func setupTableView() {
@@ -46,10 +52,6 @@ final class PeopleViewController: UIViewController {
             guard let self else { return }
             peopleView.tableView.reloadData()
         }
-    }
-    
-    private func fetchPeople() {
-        peopleViewModel.fetchPeople()
     }
     
     private func startUpdatingLocations() {
