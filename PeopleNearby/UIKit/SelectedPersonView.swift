@@ -10,12 +10,15 @@ import UIKit
 final class SelectedPersonView: UIView {
     private enum Constants {
         static let padding: CGFloat = 16.0
+        static let spacing: CGFloat = 8.0
         static let cornerRadius: CGFloat = 10.0
         static let sizeAvatar: CGFloat = 50.0
+        static let sizeStatus: CGFloat = 20.0
     }
     
     private let avatarImageView = UIImageView()
     private let nameLabel = UILabel()
+    private let statusImageView = UIImageView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,12 +37,17 @@ final class SelectedPersonView: UIView {
 
         nameLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         nameLabel.textColor = .black
+        
+        statusImageView.tintColor = .systemGreen
+        statusImageView.image = UIImage(systemName: "location.magnifyingglass")
 
         addSubview(avatarImageView)
         addSubview(nameLabel)
+        addSubview(statusImageView)
         
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        statusImageView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.padding),
@@ -49,7 +57,11 @@ final class SelectedPersonView: UIView {
             
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Constants.padding),
             nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.padding)
+            
+            statusImageView.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: Constants.spacing),
+            statusImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            statusImageView.widthAnchor.constraint(equalToConstant: Constants.sizeStatus),
+            statusImageView.heightAnchor.constraint(equalToConstant: Constants.sizeStatus)
         ])
     }
 

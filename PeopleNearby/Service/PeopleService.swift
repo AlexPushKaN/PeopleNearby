@@ -33,7 +33,7 @@ final class PeopleService {
                     let oldLongitude = location.coordinate.longitude
                     let latitude = Double.random(in: oldLatitude - 5.0...oldLatitude + 5.0)
                     let longitude = Double.random(in: oldLongitude - 5.0...oldLongitude + 5)
-                    let location = CLLocation(latitude: latitude, longitude: longitude)
+                    let location = CLLocation(latitude: latitude, longitude: longitude).toLocation()
                     let person = Person(
                         id: id,
                         name: name,
@@ -87,13 +87,13 @@ final class PeopleService {
     func updateLocations(for people: [Person], completion: @escaping ([Person]) -> Void) {
         var updatedPeople = [Person]()
         for person in people {
-            let newLatitude = person.location.coordinate.latitude + Double.random(in: -0.01...0.01)
-            let newLongitude = person.location.coordinate.longitude + Double.random(in: -0.01...0.01)
+            let newLatitude = person.location.latitude + Double.random(in: -0.01...0.01)
+            let newLongitude = person.location.longitude + Double.random(in: -0.01...0.01)
             let updatedPerson = Person(
                 id: person.id,
                 name: person.name,
                 avatarURL: person.avatarURL, 
-                location: CLLocation(latitude: newLatitude, longitude: newLongitude)
+                location: CLLocation(latitude: newLatitude, longitude: newLongitude).toLocation()
             )
             updatedPeople.append(updatedPerson)
         }

@@ -11,7 +11,8 @@ final class ViewControllerFactory {
     static func createController() -> PeopleViewController? {
         let locationManager = LocationManager.shared
         let peopleService = PeopleService()
-        let viewModel = PeopleViewModel(services: peopleService, and: locationManager)
+        let networkService = NetworkService()
+        let viewModel = PeopleViewModel(services: peopleService, networkService, and: locationManager)
         let controller = PeopleViewController(viewModel: viewModel)
         return controller
     }

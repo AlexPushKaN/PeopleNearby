@@ -10,6 +10,12 @@ import UIKit
 final class PeopleView: UIView {
     let tableView = UITableView()
     let selectedPersonView = SelectedPersonView()
+    let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,6 +38,8 @@ final class PeopleView: UIView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(tableView)
         
+        addSubview(activityIndicator)
+        
         NSLayoutConstraint.activate([
             selectedPersonView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             selectedPersonView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -41,7 +49,18 @@ final class PeopleView: UIView {
             tableView.topAnchor.constraint(equalTo: selectedPersonView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+    }
+    
+    func activityIndicator(show: Bool) {
+        if show {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
     }
 }

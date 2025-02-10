@@ -12,8 +12,10 @@ protocol PeopleViewModelProtocol {
     var people: [Person] { get set }
     var onPeopleUpdated: (() -> Void)? { get set }
     
-    func fetchPeople(nearby location: CLLocation)
+    func requestLocationAccess(completion: @escaping () -> Void)
+    func fetchPeople(nearby location: CLLocation, completionHandler: @escaping () -> Void)
     func updatePeopleLocations()
     func getCurrentLocation() -> CLLocation?
     func calculateDistance(from location: CLLocation, to person: Person) -> Double
+    func fetchImageData(by index: NSNumber, completionHandler: @escaping (Data?) -> Void)
 }

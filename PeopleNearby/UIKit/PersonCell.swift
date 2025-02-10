@@ -62,7 +62,7 @@ final class PersonCell: UITableViewCell {
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Constants.spacing),
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.spacing),
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.spacing),
-
+            
             distanceLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: Constants.spacing),
             distanceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.padding),
             distanceLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.spacing),
@@ -74,8 +74,11 @@ final class PersonCell: UITableViewCell {
         nameLabel.text = person.name
         distanceLabel.text = String(format: "%.0f m", distance)
     }
-    
+
     func setAvatar(image: UIImage) {
-        avatarImageView.image = image
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            avatarImageView.image = image
+        }
     }
 }

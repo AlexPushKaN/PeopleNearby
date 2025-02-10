@@ -12,9 +12,14 @@ struct Person {
     let id: String
     let name: String
     let avatarURL: String
-    var location: CLLocation
+    var location: Location
     
-    func getCurrentLocation() -> CLLocation {
+    func getCurrentLocation() -> Location {
         return location
     }
+}
+
+struct Location {
+    let latitude: Double
+    let longitude: Double
 }

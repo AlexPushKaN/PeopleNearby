@@ -36,9 +36,17 @@ final class PeopleViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let currentCoordinate = peopleViewModel.getCurrentLocation() {
-            peopleViewModel.fetchPeople(nearby: currentCoordinate)
-            startUpdatingLocations()
+        peopleViewModel.requestLocationAccess {
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+                guard let self = self else { return }
+                if let currentCoordinate = peopleViewModel.getCurrentLocation() {
+                    peopleView.activityIndicator(show: true)
+                    peopleViewModel.fetchPeople(nearby: currentCoordinate) {
+                        self.peopleView.activityIndicator(show: false)
+                    }
+                    startUpdatingLocations()
+                }
+            }
         }
     }
     
@@ -49,36 +57,16 @@ final class PeopleViewController: UIViewController {
     
     private func setupBindigs() {
         peopleViewModel.onPeopleUpdated = { [weak self] in
-            guard let self else { return }
-            peopleView.tableView.reloadData()
+            guard let self = self else { return }
+            self.peopleView.tableView.reloadData()
         }
     }
     
     private func startUpdatingLocations() {
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            peopleViewModel.updatePeopleLocations()
+        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            self.peopleViewModel.updatePeopleLocations()
         }
-    }
-
-    private func getImage(from person: Person, with index: NSNumber) -> UIImage? {
-        if let cachedImage = cacheImages.object(forKey: index) {
-            return cachedImage
-        } else {
-            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                if let url = URL(string: person.avatarURL) {
-                    URLSession.shared.dataTask(with: url) { data, _, _ in
-                        if let data = data, let image = UIImage(data: data) {
-                            self?.cacheImages.setObject(image, forKey: index)
-                            DispatchQueue.main.async {
-                                self?.peopleView.tableView.reloadData()
-                            }
-                        }
-                    }.resume()
-                }
-            }
-        }
-        return nil
     }
 }
 
@@ -91,13 +79,30 @@ extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PersonCell.reuseIdentifier, for: indexPath) as! PersonCell
         let person = peopleViewModel.people[indexPath.row]
-        let index = NSNumber(value: indexPath.item)
-        if let userLocation = selectedPerson?.getCurrentLocation() ?? peopleViewModel.getCurrentLocation() {
+        if let userLocation = selectedPerson?.getCurrentLocation().toCLLocation() ?? peopleViewModel.getCurrentLocation() {
             let distance = peopleViewModel.calculateDistance(from: userLocation, to: person)
             cell.configure(person: person, distance: distance)
         }
-        if let image = getImage(from: person, with: index) {
+        
+        let index = NSNumber(value: indexPath.item)
+        if let image = cacheImages.object(forKey: index) {
             cell.setAvatar(image: image)
+        } else {
+            peopleViewModel.fetchImageData(by: index, completionHandler: { [weak self] imageData in
+                guard let self else { return }
+                switch imageData {
+                case .none:
+                    if let systemImage = UIImage(systemName: "nosign") {
+                        cacheImages.setObject(systemImage, forKey: index)
+                        cell.setAvatar(image: systemImage)
+                    }
+                case .some(let imageData):
+                    if let image = UIImage(data: imageData) {
+                        cacheImages.setObject(image, forKey: index)
+                        cell.setAvatar(image: image)
+                    }
+                }
+            })
         }
         return cell
     }
@@ -105,13 +110,13 @@ extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let person = peopleViewModel.people[indexPath.row]
-        if selectedPerson?.id == person.id {
-            selectedPerson = nil
-            peopleView.selectedPersonView.isHidden = true
+        if self.selectedPerson?.id == person.id {
+            self.selectedPerson = nil
+            self.peopleView.selectedPersonView.isHidden = true
         } else {
-            selectedPerson = person
-            peopleView.selectedPersonView.configure(with: person)
-            peopleView.selectedPersonView.isHidden = false
+            self.selectedPerson = person
+            self.peopleView.selectedPersonView.configure(with: person)
+            self.peopleView.selectedPersonView.isHidden = false
         }
     }
     

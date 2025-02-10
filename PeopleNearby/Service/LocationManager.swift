@@ -12,18 +12,35 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
     private var locationManager = CLLocationManager()
     private var currentLocation: CLLocation?
+    private var onAuthorizationGranted: (() -> Void)?
     
     private override init() {
         super.init()
         locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
+    }
+    
+    func requestLocationAccess(completion: @escaping () -> Void) {
+        self.onAuthorizationGranted = completion
+        
+        let status = locationManager.authorizationStatus
+        if status == .notDetermined {
+            locationManager.requestWhenInUseAuthorization()
+        } else if status == .authorizedWhenInUse || status == .authorizedAlways {
+            completion()
+        } else {
+            print("Доступ к геолокации не предоставлен")
+        }
     }
     
     func getCurrentLocation() -> CLLocation? {
         return currentLocation
     }
     
+    func startUpdatingLocation() {
+        locationManager.startUpdatingLocation()
+    }
+    
+    // MARK: - CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         currentLocation = location
@@ -31,5 +48,15 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Ошибка получения локации: \(error.localizedDescription)")
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = manager.authorizationStatus
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
+            onAuthorizationGranted?()
+            startUpdatingLocation()
+        } else {
+            print("Доступ к геолокации не предоставлен")
+        }
     }
 }
