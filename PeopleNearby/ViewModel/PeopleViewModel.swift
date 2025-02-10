@@ -27,9 +27,9 @@ final class PeopleViewModel: PeopleViewModelProtocol {
         self.locationManager = locationManager
     }
     
-    func requestLocationAccess(completion: @escaping () -> Void) {
-        locationManager.requestLocationAccess {
-            completion()
+    func requestLocationAccess(completion: @escaping (Result<Void, Error>) -> Void) {
+        locationManager.requestLocationAccess { result in
+            completion(result.mapError { $0 as Error })
         }
     }
     
@@ -41,8 +41,8 @@ final class PeopleViewModel: PeopleViewModelProtocol {
         }
     }
 
-    func updatePeopleLocations() {
-        peopleService.updateLocations(for: people) { [weak self] updatedPeople in
+    func updatePeopleLocations(except person: Person?) {
+        peopleService.updateLocations(for: people, except: person) { [weak self] updatedPeople in
             guard let self = self else { return }
             self.people = updatedPeople
         }
@@ -54,7 +54,7 @@ final class PeopleViewModel: PeopleViewModelProtocol {
     }
     
     func getCurrentLocation() -> CLLocation? {
-        return locationManager.getCurrentLocation()
+        return locationManager.currentLocation
     }
     
     func fetchImageData(by index: NSNumber, completionHandler: @escaping (Data?) -> Void) {

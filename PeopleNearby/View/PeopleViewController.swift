@@ -36,18 +36,36 @@ final class PeopleViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        peopleViewModel.requestLocationAccess {
-            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-                guard let self = self else { return }
-                if let currentCoordinate = peopleViewModel.getCurrentLocation() {
-                    peopleView.activityIndicator(show: true)
-                    peopleViewModel.fetchPeople(nearby: currentCoordinate) {
-                        self.peopleView.activityIndicator(show: false)
-                    }
-                    startUpdatingLocations()
-                }
+        requestLocationAndFetchPeople()
+    }
+    
+    private func requestLocationAndFetchPeople() {
+        peopleView.activityIndicator(show: true)
+        peopleViewModel.requestLocationAccess { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success:
+                self.setupLocationUpdates()
+            case .failure(let error):
+                self.peopleView.activityIndicator(show: false)
+                self.showAlert(with: error)
             }
         }
+    }
+    
+    private func setupLocationUpdates() {
+        LocationManager.shared.onFirstLocationUpdate = { [weak self] location in
+            guard let self = self else { return }
+            self.peopleViewModel.fetchPeople(nearby: location) {
+                self.peopleView.activityIndicator(show: false)
+            }
+            self.startUpdatingLocations()
+        }
+        LocationManager.shared.startUpdatingLocation()
+    }
+    
+    private func showAlert(with error: Error) {
+        UIAlertController.showLocationErrorAlert(error: error, controller: self)
     }
     
     private func setupTableView() {
@@ -65,7 +83,7 @@ final class PeopleViewController: UIViewController {
     private func startUpdatingLocations() {
         Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            self.peopleViewModel.updatePeopleLocations()
+            self.peopleViewModel.updatePeopleLocations(except: selectedPerson)
         }
     }
 }
@@ -90,16 +108,20 @@ extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
         } else {
             peopleViewModel.fetchImageData(by: index, completionHandler: { [weak self] imageData in
                 guard let self else { return }
-                switch imageData {
-                case .none:
-                    if let systemImage = UIImage(systemName: "nosign") {
-                        cacheImages.setObject(systemImage, forKey: index)
-                        cell.setAvatar(image: systemImage)
-                    }
-                case .some(let imageData):
-                    if let image = UIImage(data: imageData) {
-                        cacheImages.setObject(image, forKey: index)
-                        cell.setAvatar(image: image)
+                DispatchQueue.main.async {
+                    if let cell = tableView.cellForRow(at: indexPath) as? PersonCell {
+                        switch imageData {
+                        case .none:
+                            if let systemImage = UIImage(systemName: "nosign") {
+                                self.cacheImages.setObject(systemImage, forKey: index)
+                                cell.setAvatar(image: systemImage)
+                            }
+                        case .some(let imageData):
+                            if let image = UIImage(data: imageData) {
+                                self.cacheImages.setObject(image, forKey: index)
+                                cell.setAvatar(image: image)
+                            }
+                        }
                     }
                 }
             })

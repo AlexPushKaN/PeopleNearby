@@ -76,9 +76,6 @@ final class PersonCell: UITableViewCell {
     }
 
     func setAvatar(image: UIImage) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            avatarImageView.image = image
-        }
+        avatarImageView.image = image
     }
 }

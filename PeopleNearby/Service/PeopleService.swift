@@ -21,7 +21,7 @@ final class PeopleService {
                            "Светлана", "Екатерина", "Вера", "Любовь", "Людмила", "Анастасия",
                            "Дарья", "Юлия", "Полина", "Кристина", "Валентина", "Виктория", "Алёна"]
         let allNames = maleNames + femaleNames
-        let peopleCount = Int.random(in: (10...20))
+        let peopleCount = Int.random(in: (10...30))
         
         for _ in 1...peopleCount {
             group.enter()
@@ -84,19 +84,23 @@ final class PeopleService {
         }.resume()
     }
     
-    func updateLocations(for people: [Person], completion: @escaping ([Person]) -> Void) {
-        var updatedPeople = [Person]()
-        for person in people {
-            let newLatitude = person.location.latitude + Double.random(in: -0.01...0.01)
-            let newLongitude = person.location.longitude + Double.random(in: -0.01...0.01)
-            let updatedPerson = Person(
+    func updateLocations(for people: [Person], except: Person?, completion: @escaping ([Person]) -> Void) {
+        let updatedPeople = people.map { person -> Person in
+            guard person.id != except?.id else {
+                return except!
+            }
+            
+            let newLatitude = person.location.latitude + Double.random(in: -0.025...0.025)
+            let newLongitude = person.location.longitude + Double.random(in: -0.025...0.025)
+            
+            return Person(
                 id: person.id,
                 name: person.name,
-                avatarURL: person.avatarURL, 
+                avatarURL: person.avatarURL,
                 location: CLLocation(latitude: newLatitude, longitude: newLongitude).toLocation()
             )
-            updatedPeople.append(updatedPerson)
         }
+        
         completion(updatedPeople)
     }
 }
