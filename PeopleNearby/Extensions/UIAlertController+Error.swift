@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIAlertController {
-    static func showLocationErrorAlert(error: Error, controller: UIViewController) {
+    static func showLocationErrorAlert(controller: UIViewController) {
         let alert = UIAlertController(
             title: "Доступ к геолокации запрещен",
             message: "Пожалуйста, разрешите доступ к геолокации в настройках",

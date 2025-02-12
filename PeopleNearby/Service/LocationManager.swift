@@ -17,7 +17,9 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
     private let locationManager = CLLocationManager()
     private var onAuthorizationGranted: ((Result<Void, LocationError>) -> Void)?
-    var currentLocation: CLLocation? { locationManager.location }
+    var currentLocation: CLLocation? {
+        locationManager.location
+    }
     var onFirstLocationUpdate: ((CLLocation) -> Void)?
     var onLocationError: ((Error) -> Void)?
     
@@ -25,6 +27,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = 10
     }
     
     func requestLocationAccess(startUpdating: Bool = true, completion: @escaping (Result<Void, LocationError>) -> Void) {
@@ -40,7 +43,9 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
             locationManager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse, .authorizedAlways:
             completion(.success(()))
-            if startUpdating { startUpdatingLocation() }
+            if startUpdating {
+                startUpdatingLocation()
+            }
         case .denied, .restricted:
             completion(.failure(.accessDenied))
         @unknown default:

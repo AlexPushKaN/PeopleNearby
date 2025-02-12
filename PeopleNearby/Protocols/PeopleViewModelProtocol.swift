@@ -12,7 +12,9 @@ protocol PeopleViewModelProtocol {
     var people: [Person] { get set }
     var onPeopleUpdated: (() -> Void)? { get set }
     
-    func requestLocationAccess(completion: @escaping (Result<Void, Error>) -> Void)
+    func requestLocationAccess(completionHandler: @escaping (Result<Void, Error>) -> Void)
+    func initialSetup(fetchPeople firstCompletionHandler: @escaping () -> Void,
+                      updateLocations secondCompletionHandler: @escaping () -> Void)
     func fetchPeople(nearby location: CLLocation, completionHandler: @escaping () -> Void)
     func updatePeopleLocations(except: Person?)
     func getCurrentLocation() -> CLLocation?

@@ -12,7 +12,6 @@ final class PeopleViewModel: PeopleViewModelProtocol {
     private let peopleService: PeopleService
     private let networkService: NetworkServiceProtocol
     private let locationManager: LocationManager
-    private let accessLock = NSLock()
     
     var onPeopleUpdated: (() -> Void)?
     var people: [Person] = [] {
@@ -27,10 +26,22 @@ final class PeopleViewModel: PeopleViewModelProtocol {
         self.locationManager = locationManager
     }
     
-    func requestLocationAccess(completion: @escaping (Result<Void, Error>) -> Void) {
+    func requestLocationAccess(completionHandler completion: @escaping (Result<Void, Error>) -> Void) {
         locationManager.requestLocationAccess { result in
             completion(result.mapError { $0 as Error })
         }
+    }
+    
+    func initialSetup(fetchPeople firstCompletionHandler: @escaping () -> Void,
+                      updateLocations secondCompletionHandler: @escaping () -> Void) {
+        locationManager.onFirstLocationUpdate = { [weak self] location in
+            guard let self = self else { return }
+            self.fetchPeople(nearby: location) {
+                firstCompletionHandler()
+            }
+            secondCompletionHandler()
+        }
+        locationManager.startUpdatingLocation()
     }
     
     func fetchPeople(nearby location: CLLocation, completionHandler: @escaping () -> Void) {

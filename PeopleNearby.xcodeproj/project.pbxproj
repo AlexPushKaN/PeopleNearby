@@ -111,8 +111,8 @@
 			isa = PBXGroup;
 			children = (
 				4D22A3962D586C92008D456B /* PeopleService.swift */,
-				4D22A3982D586CAE008D456B /* LocationManager.swift */,
 				4D60F9142D59B8AC0004F375 /* NetworkService.swift */,
+				4D22A3982D586CAE008D456B /* LocationManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -120,8 +120,8 @@
 		4D22A39A2D586CBD008D456B /* View */ = {
 			isa = PBXGroup;
 			children = (
-				4D22A3A32D58C68B008D456B /* PeopleView.swift */,
 				4D22A39E2D586D33008D456B /* PeopleViewController.swift */,
+				4D22A3A32D58C68B008D456B /* PeopleView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -164,8 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				4D60F9172D5A09560004F375 /* CLLocation+Extension.swift */,
-				4D60F91B2D5A56C00004F375 /* UIAlertController+Error.swift */,
 				4D60F9192D5A0B040004F375 /* Location+Extension.swift */,
+				4D60F91B2D5A56C00004F375 /* UIAlertController+Error.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";

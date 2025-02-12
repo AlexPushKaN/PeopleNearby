@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CoreLocation
 
 final class PeopleViewController: UIViewController {
     private let peopleView: PeopleView = PeopleView()
@@ -36,16 +35,22 @@ final class PeopleViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        requestLocationAndFetchPeople()
+        requestLocationAccess()
     }
     
-    private func requestLocationAndFetchPeople() {
+    private func requestLocationAccess() {
         peopleView.activityIndicator(show: true)
         peopleViewModel.requestLocationAccess { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success:
-                self.setupLocationUpdates()
+                self.peopleViewModel.initialSetup(
+                    fetchPeople: {
+                        self.peopleView.activityIndicator(show: false)
+                    },
+                    updateLocations: {
+                        self.startUpdatingLocations()
+                    })
             case .failure(let error):
                 self.peopleView.activityIndicator(show: false)
                 self.showAlert(with: error)
@@ -53,19 +58,9 @@ final class PeopleViewController: UIViewController {
         }
     }
     
-    private func setupLocationUpdates() {
-        LocationManager.shared.onFirstLocationUpdate = { [weak self] location in
-            guard let self = self else { return }
-            self.peopleViewModel.fetchPeople(nearby: location) {
-                self.peopleView.activityIndicator(show: false)
-            }
-            self.startUpdatingLocations()
-        }
-        LocationManager.shared.startUpdatingLocation()
-    }
-    
     private func showAlert(with error: Error) {
-        UIAlertController.showLocationErrorAlert(error: error, controller: self)
+        print("Error: \(error.localizedDescription)")
+        UIAlertController.showLocationErrorAlert(controller: self)
     }
     
     private func setupTableView() {
