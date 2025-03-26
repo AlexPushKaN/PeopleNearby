@@ -35,6 +35,7 @@ final class PeopleView: UIView {
         addSubview(selectedPersonView)
         
         tableView.register(PersonCell.self, forCellReuseIdentifier: PersonCell.reuseIdentifier)
+        tableView.backgroundColor = .clear
         tableView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(tableView)
         

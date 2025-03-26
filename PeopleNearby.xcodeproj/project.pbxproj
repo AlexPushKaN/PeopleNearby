@@ -26,6 +26,8 @@
 		4D60F9182D5A09560004F375 /* CLLocation+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D60F9172D5A09560004F375 /* CLLocation+Extension.swift */; };
 		4D60F91A2D5A0B040004F375 /* Location+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D60F9192D5A0B040004F375 /* Location+Extension.swift */; };
 		4D60F91C2D5A56C00004F375 /* UIAlertController+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D60F91B2D5A56C00004F375 /* UIAlertController+Error.swift */; };
+		4D89D2482D9286DC009D5519 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D89D2472D9286DC009D5519 /* Settings.bundle */; };
+		4D89D24A2D928C68009D5519 /* PlugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D89D2492D928C68009D5519 /* PlugView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,8 @@
 		4D60F9172D5A09560004F375 /* CLLocation+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extension.swift"; sourceTree = "<group>"; };
 		4D60F9192D5A0B040004F375 /* Location+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Extension.swift"; sourceTree = "<group>"; };
 		4D60F91B2D5A56C00004F375 /* UIAlertController+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Error.swift"; sourceTree = "<group>"; };
+		4D89D2472D9286DC009D5519 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		4D89D2492D928C68009D5519 /* PlugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,7 @@
 		4D22A36E2D5869E2008D456B = {
 			isa = PBXGroup;
 			children = (
+				4D89D2472D9286DC009D5519 /* Settings.bundle */,
 				4D22A3792D5869E2008D456B /* PeopleNearby */,
 				4D22A3782D5869E2008D456B /* Products */,
 			);
@@ -122,6 +127,7 @@
 			children = (
 				4D22A39E2D586D33008D456B /* PeopleViewController.swift */,
 				4D22A3A32D58C68B008D456B /* PeopleView.swift */,
+				4D89D2492D928C68009D5519 /* PlugView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -229,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D22A3872D5869E3008D456B /* LaunchScreen.storyboard in Resources */,
+				4D89D2482D9286DC009D5519 /* Settings.bundle in Resources */,
 				4D22A3842D5869E3008D456B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -246,6 +253,7 @@
 				4D22A3A42D58C68B008D456B /* PeopleView.swift in Sources */,
 				4D22A3972D586C92008D456B /* PeopleService.swift in Sources */,
 				4D60F91A2D5A0B040004F375 /* Location+Extension.swift in Sources */,
+				4D89D24A2D928C68009D5519 /* PlugView.swift in Sources */,
 				4D22A3992D586CAE008D456B /* LocationManager.swift in Sources */,
 				4D22A37B2D5869E2008D456B /* AppDelegate.swift in Sources */,
 				4D60F9182D5A09560004F375 /* CLLocation+Extension.swift in Sources */,
@@ -400,20 +408,20 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GF5L9B2GCL;
+				DEVELOPMENT_TEAM = SR6T9Z9RAZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PeopleNearby/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.PeopleNearby;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PeopleNearby.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -431,20 +439,20 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GF5L9B2GCL;
+				DEVELOPMENT_TEAM = SR6T9Z9RAZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PeopleNearby/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.PeopleNearby;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PeopleNearby.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

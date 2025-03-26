@@ -9,6 +9,10 @@ import UIKit
 
 final class PeopleViewController: UIViewController {
     private let peopleView: PeopleView = PeopleView()
+    private var plugView = PlugView {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
+    }
     private var peopleViewModel: PeopleViewModelProtocol
     private var selectedPerson: Person?
     private let cacheImages = NSCache<NSNumber, UIImage>()
@@ -23,27 +27,60 @@ final class PeopleViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func loadView() {
-        view = peopleView
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupSubviews()
         setupTableView()
-        setupBindigs()
+        setupBindings()
+
+        peopleViewModel.onReAccessCall = { [weak self] in
+            self?.peopleView.isHidden = false
+            self?.plugView.isHidden = true
+            self?.requestLocationAccess()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        requestLocationAccess()
+        
+        if peopleViewModel.getAutorizationStatus() != .denied {
+            requestLocationAccess()
+        }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(willEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+    }
+
+    @objc private func willEnterForeground() {
+        if peopleViewModel.getAutorizationStatus() == .denied {
+            peopleView.isHidden = true
+            plugView.isHidden = false
+        }
+    }
+
     private func requestLocationAccess() {
         peopleView.activityIndicator(show: true)
         peopleViewModel.requestLocationAccess { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success:
+                self.peopleView.isHidden = false
+                self.plugView.isHidden = true
                 self.peopleViewModel.initialSetup(
                     fetchPeople: {
                         self.peopleView.activityIndicator(show: false)
@@ -63,22 +100,48 @@ final class PeopleViewController: UIViewController {
         UIAlertController.showLocationErrorAlert(controller: self)
     }
     
+    private func setupSubviews() {
+        view.addSubview(peopleView)
+        view.addSubview(plugView)
+        
+        peopleView.translatesAutoresizingMaskIntoConstraints = false
+        plugView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            peopleView.topAnchor.constraint(equalTo: view.topAnchor),
+            peopleView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            peopleView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            peopleView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            plugView.topAnchor.constraint(equalTo: view.topAnchor),
+            plugView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            plugView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            plugView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+    
     private func setupTableView() {
         peopleView.tableView.dataSource = self
         peopleView.tableView.delegate = self
     }
     
-    private func setupBindigs() {
+    private func setupBindings() {
         peopleViewModel.onPeopleUpdated = { [weak self] in
             guard let self = self else { return }
             self.peopleView.tableView.reloadData()
         }
     }
-    
-    private func startUpdatingLocations() {
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+
+    private var updateTimer: Timer?
+
+    func startUpdatingLocations() {
+        updateTimer?.invalidate()
+        updateTimer = Timer.scheduledTimer(
+            withTimeInterval: 3.0,
+            repeats: true
+        ) { [weak self] _ in
             guard let self = self else { return }
-            self.peopleViewModel.updatePeopleLocations(except: selectedPerson)
+            self.peopleViewModel.updatePeopleLocations(except: self.selectedPerson)
         }
     }
 }
@@ -130,10 +193,12 @@ extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
         if self.selectedPerson?.id == person.id {
             self.selectedPerson = nil
             self.peopleView.selectedPersonView.isHidden = true
+            self.peopleViewModel.updatePeopleLocations(except: nil)
         } else {
             self.selectedPerson = person
             self.peopleView.selectedPersonView.configure(with: person)
             self.peopleView.selectedPersonView.isHidden = false
+            self.peopleViewModel.updatePeopleLocations(except: selectedPerson)
         }
     }
     

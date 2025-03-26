@@ -17,5 +17,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         self.window = window
     }
+    
+    func sceneDidDisconnect(_ scene: UIScene) {
+        
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        
+    }
+
+    func sceneWillResignActive(_ scene: UIScene) {
+        
+    }
+
+    func sceneWillEnterForeground(_ scene: UIScene) {
+//        if let controller = window?.rootViewController as? PeopleViewController {
+//            controller.startUpdatingLocations()
+//        }
+    }
+
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        
+    }
 }
 

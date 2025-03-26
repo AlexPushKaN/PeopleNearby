@@ -15,13 +15,14 @@ enum LocationError: Error {
 
 final class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
-    private let locationManager = CLLocationManager()
+    let locationManager = CLLocationManager()
     private var onAuthorizationGranted: ((Result<Void, LocationError>) -> Void)?
     var currentLocation: CLLocation? {
         locationManager.location
     }
     var onFirstLocationUpdate: ((CLLocation) -> Void)?
     var onLocationError: ((Error) -> Void)?
+    var onReAccessCall: (() -> Void)?
     
     private override init() {
         super.init()
@@ -57,6 +58,10 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
     
+    func getAutorizationStatus() -> CLAuthorizationStatus {
+        locationManager.authorizationStatus
+    }
+    
     // MARK: - CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
@@ -80,9 +85,10 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
             onAuthorizationGranted?(.success(()))
         case .denied, .restricted:
             onAuthorizationGranted?(.failure(.accessDenied))
+        case .notDetermined:
+            onReAccessCall?()
         default:
             break
         }
-        onAuthorizationGranted = nil
     }
 }
