@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class PeopleViewController: UIViewController {
     private let peopleView: PeopleView = PeopleView()
@@ -67,9 +68,13 @@ final class PeopleViewController: UIViewController {
     }
 
     @objc private func willEnterForeground() {
-        if peopleViewModel.getAutorizationStatus() == .denied {
-            peopleView.isHidden = true
-            plugView.isHidden = false
+        DispatchQueue.global(qos: .background).async {
+            if CLLocationManager.locationServicesEnabled() {
+                DispatchQueue.main.async {
+                    self.peopleView.isHidden = true
+                    self.plugView.isHidden = false
+                }
+            }
         }
     }
 

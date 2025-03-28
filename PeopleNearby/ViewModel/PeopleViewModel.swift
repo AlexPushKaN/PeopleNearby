@@ -20,9 +20,6 @@ final class PeopleViewModel: PeopleViewModelProtocol {
         }
     }
     var onReAccessCall: (() -> Void)?
-    lazy var checkAuthorization: () -> Void = {
-        self.locationManager.locationManagerDidChangeAuthorization(LocationManager.shared.locationManager)
-    }
 
     init(services people: PeopleService, _ network: NetworkServiceProtocol, and locationManager: LocationManager) {
         self.peopleService = people

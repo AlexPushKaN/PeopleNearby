@@ -15,7 +15,7 @@ enum LocationError: Error {
 
 final class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
-    let locationManager = CLLocationManager()
+    private let locationManager = CLLocationManager()
     private var onAuthorizationGranted: ((Result<Void, LocationError>) -> Void)?
     var currentLocation: CLLocation? {
         locationManager.location
