@@ -10,13 +10,11 @@ import CoreLocation
 
 final class PeopleViewController: UIViewController {
     private let peopleView: PeopleView = PeopleView()
-    private var plugView = PlugView {
-        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-        UIApplication.shared.open(url)
-    }
     private var peopleViewModel: PeopleViewModelProtocol
     private var selectedPerson: Person?
     private let cacheImages = NSCache<NSNumber, UIImage>()
+    
+    private var updateTimer: Timer?
 
     init(viewModel: PeopleViewModelProtocol) {
         self.peopleViewModel = viewModel
@@ -34,20 +32,12 @@ final class PeopleViewController: UIViewController {
         setupSubviews()
         setupTableView()
         setupBindings()
-
-        peopleViewModel.onReAccessCall = { [weak self] in
-            self?.peopleView.isHidden = false
-            self?.plugView.isHidden = true
-            self?.requestLocationAccess()
-        }
+        
+        requestLocationAccess()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if peopleViewModel.getAutorizationStatus() != .denied {
-            requestLocationAccess()
-        }
         
         NotificationCenter.default.addObserver(
             self,
@@ -68,60 +58,37 @@ final class PeopleViewController: UIViewController {
     }
 
     @objc private func willEnterForeground() {
-        DispatchQueue.global(qos: .background).async {
-            if CLLocationManager.locationServicesEnabled() {
-                DispatchQueue.main.async {
-                    self.peopleView.isHidden = true
-                    self.plugView.isHidden = false
-                }
-            }
-        }
+        requestLocationAccess()
     }
-
+    
     private func requestLocationAccess() {
-        peopleView.activityIndicator(show: true)
         peopleViewModel.requestLocationAccess { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success:
-                self.peopleView.isHidden = false
-                self.plugView.isHidden = true
-                self.peopleViewModel.initialSetup(
-                    fetchPeople: {
-                        self.peopleView.activityIndicator(show: false)
-                    },
-                    updateLocations: {
-                        self.startUpdatingLocations()
-                    })
+                peopleView.activityIndicator(show: true)
+                peopleViewModel.getLocationAndFetchPeople()
             case .failure(let error):
-                self.peopleView.activityIndicator(show: false)
                 self.showAlert(with: error)
             }
         }
     }
     
-    private func showAlert(with error: Error) {
+    private func showAlert(with error: LocationError) {
         print("Error: \(error.localizedDescription)")
         UIAlertController.showLocationErrorAlert(controller: self)
     }
     
     private func setupSubviews() {
         view.addSubview(peopleView)
-        view.addSubview(plugView)
         
         peopleView.translatesAutoresizingMaskIntoConstraints = false
-        plugView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             peopleView.topAnchor.constraint(equalTo: view.topAnchor),
             peopleView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             peopleView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             peopleView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            plugView.topAnchor.constraint(equalTo: view.topAnchor),
-            plugView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            plugView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            plugView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
@@ -133,11 +100,11 @@ final class PeopleViewController: UIViewController {
     private func setupBindings() {
         peopleViewModel.onPeopleUpdated = { [weak self] in
             guard let self = self else { return }
-            self.peopleView.tableView.reloadData()
+            peopleView.tableView.reloadData()
+            peopleView.activityIndicator(show: false)
+            startUpdatingLocations()
         }
     }
-
-    private var updateTimer: Timer?
 
     func startUpdatingLocations() {
         updateTimer?.invalidate()
@@ -160,7 +127,7 @@ extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PersonCell.reuseIdentifier, for: indexPath) as! PersonCell
         let person = peopleViewModel.people[indexPath.row]
-        if let userLocation = selectedPerson?.getCurrentLocation().toCLLocation() ?? peopleViewModel.getCurrentLocation() {
+        if let userLocation = selectedPerson?.getCurrentLocation().toCLLocation() ?? peopleViewModel.currentLocation {
             let distance = peopleViewModel.calculateDistance(from: userLocation, to: person)
             cell.configure(person: person, distance: distance)
         }

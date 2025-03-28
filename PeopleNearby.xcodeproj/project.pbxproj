@@ -13,7 +13,7 @@
 		4D22A3872D5869E3008D456B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D22A3852D5869E3008D456B /* LaunchScreen.storyboard */; };
 		4D22A3922D586C4C008D456B /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3912D586C4C008D456B /* Person.swift */; };
 		4D22A3972D586C92008D456B /* PeopleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3962D586C92008D456B /* PeopleService.swift */; };
-		4D22A3992D586CAE008D456B /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3982D586CAE008D456B /* LocationManager.swift */; };
+		4D22A3992D586CAE008D456B /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3982D586CAE008D456B /* LocationService.swift */; };
 		4D22A39C2D586CF7008D456B /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A39B2D586CF7008D456B /* PersonCell.swift */; };
 		4D22A39F2D586D33008D456B /* PeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A39E2D586D33008D456B /* PeopleViewController.swift */; };
 		4D22A3A12D586D65008D456B /* SelectedPersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D22A3A02D586D65008D456B /* SelectedPersonView.swift */; };
@@ -27,7 +27,6 @@
 		4D60F91A2D5A0B040004F375 /* Location+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D60F9192D5A0B040004F375 /* Location+Extension.swift */; };
 		4D60F91C2D5A56C00004F375 /* UIAlertController+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D60F91B2D5A56C00004F375 /* UIAlertController+Error.swift */; };
 		4D89D2482D9286DC009D5519 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D89D2472D9286DC009D5519 /* Settings.bundle */; };
-		4D89D24A2D928C68009D5519 /* PlugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D89D2492D928C68009D5519 /* PlugView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +38,7 @@
 		4D22A3882D5869E3008D456B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D22A3912D586C4C008D456B /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		4D22A3962D586C92008D456B /* PeopleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleService.swift; sourceTree = "<group>"; };
-		4D22A3982D586CAE008D456B /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		4D22A3982D586CAE008D456B /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		4D22A39B2D586CF7008D456B /* PersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonCell.swift; sourceTree = "<group>"; };
 		4D22A39E2D586D33008D456B /* PeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleViewController.swift; sourceTree = "<group>"; };
 		4D22A3A02D586D65008D456B /* SelectedPersonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPersonView.swift; sourceTree = "<group>"; };
@@ -53,7 +52,6 @@
 		4D60F9192D5A0B040004F375 /* Location+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Extension.swift"; sourceTree = "<group>"; };
 		4D60F91B2D5A56C00004F375 /* UIAlertController+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Error.swift"; sourceTree = "<group>"; };
 		4D89D2472D9286DC009D5519 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		4D89D2492D928C68009D5519 /* PlugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +115,7 @@
 			children = (
 				4D22A3962D586C92008D456B /* PeopleService.swift */,
 				4D60F9142D59B8AC0004F375 /* NetworkService.swift */,
-				4D22A3982D586CAE008D456B /* LocationManager.swift */,
+				4D22A3982D586CAE008D456B /* LocationService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -127,7 +125,6 @@
 			children = (
 				4D22A39E2D586D33008D456B /* PeopleViewController.swift */,
 				4D22A3A32D58C68B008D456B /* PeopleView.swift */,
-				4D89D2492D928C68009D5519 /* PlugView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -253,8 +250,7 @@
 				4D22A3A42D58C68B008D456B /* PeopleView.swift in Sources */,
 				4D22A3972D586C92008D456B /* PeopleService.swift in Sources */,
 				4D60F91A2D5A0B040004F375 /* Location+Extension.swift in Sources */,
-				4D89D24A2D928C68009D5519 /* PlugView.swift in Sources */,
-				4D22A3992D586CAE008D456B /* LocationManager.swift in Sources */,
+				4D22A3992D586CAE008D456B /* LocationService.swift in Sources */,
 				4D22A37B2D5869E2008D456B /* AppDelegate.swift in Sources */,
 				4D60F9182D5A09560004F375 /* CLLocation+Extension.swift in Sources */,
 				4D60F9152D59B8AC0004F375 /* NetworkService.swift in Sources */,
